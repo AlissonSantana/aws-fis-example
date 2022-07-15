@@ -1,0 +1,32 @@
+{
+    "description": "ec2-fault-inject",
+    "targets": {
+        "Instances-Target-1": {
+            "resourceType": "aws:ec2:instance",
+            "resourceArns": [
+                "arn:aws:ec2:<ZONE>:<ID>:instance/i-<ID>"
+            ],
+            "selectionMode": "COUNT(1)"
+        }
+    },
+    "actions": {
+        "ec2-inject": {
+            "actionId": "aws:ec2:stop-instances",
+            "description": "ec2 test",
+            "parameters": {},
+            "targets": {
+                "Instances": "Instances-Target-1"
+            }
+        }
+    },
+    "stopConditions": [
+        {
+            "source": "aws:cloudwatch:alarm",
+            "value": "arn:aws:cloudwatch:<ZONE>:<ID>:alarm:TargetTracking-table/<ALARM>"
+        }
+    ],
+    "roleArn": "arn:aws:iam::<ID>:role/service-role/AWSFISIAMRole-<ID>",
+    "tags": {
+        "Name": "ec2-fault-inject"
+    }
+}
